@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { SearchComponent } from "@/components/search";
 import { EndpointCard } from "@/components/endpoint-card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Plane, Zap, Shield, Globe, Lock, CreditCard, Ticket } from "lucide-react";
+import { ArrowRight, Plane, Zap, Shield, Globe, Lock, CreditCard, Ticket, FileText } from "lucide-react";
 import Link from "next/link";
 
 const features = [
