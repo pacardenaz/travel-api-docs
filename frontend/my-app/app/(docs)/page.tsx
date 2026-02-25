@@ -4,46 +4,53 @@ import { motion } from "framer-motion";
 import { SearchComponent } from "@/components/search";
 import { EndpointCard } from "@/components/endpoint-card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2, Zap, Shield, MapPin } from "lucide-react";
+import { ArrowRight, Plane, Zap, Shield, Globe, Lock, CreditCard, Ticket } from "lucide-react";
 import Link from "next/link";
 
 const features = [
   {
     icon: <Zap className="h-5 w-5" />,
-    title: "Rápida y Confiable",
-    description: "Tiempos de respuesta optimizados para el mercado colombiano",
+    title: "Múltiples Proveedores",
+    description: "GDS, NO-GDS y NDC en una sola integración",
   },
   {
     icon: <Shield className="h-5 w-5" />,
-    title: "Segura",
-    description: "Autenticación con API Key y encriptación de datos sensibles",
+    title: "Autenticación JWT",
+    description: "Seguridad con tokens Bearer y API Key",
   },
   {
-    icon: <MapPin className="h-5 w-5" />,
-    title: "Cobertura Nacional",
-    description: "Acceso a proveedores turísticos en toda Colombia",
+    icon: <Globe className="h-5 w-5" />,
+    title: "Cobertura Amplia",
+    description: "Sabre, Amadeus, Travelport, NDC y más",
   },
 ];
 
 const quickEndpoints = [
   {
-    method: "GET",
-    path: "/v1/availability",
-    title: "Consultar Disponibilidad",
-    description: "Busca disponibilidad de hoteles, vuelos y actividades turísticas",
+    method: "POST",
+    path: "/auth/credentials",
+    title: "Autenticación",
+    description: "Obtén tu token JWT para acceder a los servicios del API",
+    href: "/ideas-fractal/auth",
+  },
+  {
+    method: "POST",
+    path: "/flights/availability/made",
+    title: "Disponibilidad",
+    description: "Consulta disponibilidad de vuelos por precio, horario o familia tarifaria",
     href: "/ideas-fractal/availability",
   },
   {
     method: "POST",
-    path: "/v1/bookings",
-    title: "Crear Reserva",
-    description: "Crea una nueva reserva para cualquier servicio turístico",
+    path: "/flights/pricing",
+    title: "Tarifación",
+    description: "Confirma tarifas de los segmentos seleccionados",
   },
   {
-    method: "GET",
-    path: "/v1/bookings/{id}",
-    title: "Obtener Reserva",
-    description: "Consulta los detalles de una reserva existente",
+    method: "POST",
+    path: "/flights/booking",
+    title: "Reserva",
+    description: "Crea reservas ante el proveedor de vuelos",
   },
 ];
 
@@ -62,7 +69,7 @@ export default function HomePage() {
         >
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
-              <Building2 className="h-8 w-8 text-white" />
+              <Plane className="h-8 w-8 text-white" />
             </div>
           </div>
           
@@ -71,8 +78,9 @@ export default function HomePage() {
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Documentación completa de la API de Ideas Fractal Colombia.
-            Integra servicios turísticos colombianos en tu aplicación.
+            API de vuelos para agencias de viajes. Consulta disponibilidad, 
+            tarifas, reservas y emisión de tiquetes con múltiples proveedores 
+            en una sola integración.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -81,14 +89,14 @@ export default function HomePage() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
             <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600">
-              <Link href="/ideas-fractal/availability">
+              <Link href="/ideas-fractal/auth">
                 Comenzar
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/ideas-fractal/availability">
-                Ver Referencia API
+                Ver API Reference
               </Link>
             </Button>
           </div>
@@ -112,6 +120,32 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">{feature.description}</p>
           </motion.div>
         ))}
+      </section>
+
+      {/* Flujo de Trabajo */}
+      <section className="rounded-xl border bg-muted/30 p-8">
+        <div className="text-center space-y-4 mb-8">
+          <h2 className="text-2xl font-bold">Flujo de Trabajo</h2>
+          <p className="text-muted-foreground">
+            Sigue estos pasos para completar una emisión aérea
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-5 gap-4">
+          {[
+            { icon: <Lock className="h-5 w-5" />, title: "1. Autenticación", desc: "Obtén token JWT" },
+            { icon: <Plane className="h-5 w-5" />, title: "2. Disponibilidad", desc: "Busca vuelos" },
+            { icon: <CreditCard className="h-5 w-5" />, title: "3. Tarifación", desc: "Confirma precios" },
+            { icon: <Ticket className="h-5 w-5" />, title: "4. Reserva", desc: "Crea reserva" },
+            { icon: <Ticket className="h-5 w-5" />, title: "5. Emisión", desc: "Genera tiquete" },
+          ].map((step, i) => (
+            <div key={i} className="flex flex-col items-center text-center p-4 rounded-lg bg-card">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 mb-3">{step.icon}</div>
+              <h4 className="font-medium text-sm">{step.title}</h4>
+              <p className="text-xs text-muted-foreground">{step.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Quick Start Endpoints */}
@@ -142,12 +176,12 @@ export default function HomePage() {
       {/* SDKs */}
       <section className="rounded-xl border bg-muted/30 p-8">
         <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold">SDKs Oficiales</h2>
+          <h2 className="text-2xl font-bold">Lenguajes Soportados</h2>
           <p className="text-muted-foreground">
-            Comienza rápidamente con nuestras librerías oficiales
+            Ejemplos de código disponibles en múltiples lenguajes
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-            {["JavaScript", "Python", "PHP", "C#"].map((lang) => (
+            {["cURL", "JavaScript", "Python", "C#", "Java", "PHP"].map((lang) => (
               <Button key={lang} variant="outline" size="sm">
                 {lang}
               </Button>

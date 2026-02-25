@@ -6,69 +6,145 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CodeBlock } from "@/components/code-block";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, Plane } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const endpoints = [
+  {
+    type: "price",
+    label: "Por Precio",
+    path: "/flights/availability/made",
+    description: "Resultados presentados en recomendaciones por precio y aerolínea, agrupando los segmentos por ida y regreso.",
+  },
+  {
+    type: "schedule",
+    label: "Por Horario",
+    path: "/flights/availability/single",
+    description: "Resultados agrupados por trayecto y ordenados según el horario de salida. Ideal para búsquedas nacionales.",
+  },
+  {
+    type: "farefamily",
+    label: "Por Familia Tarifaria",
+    path: "/flights/availability/farefamily",
+    description: "Resultados agrupados por familia tarifaria. Mezcla entre búsqueda por horario con agrupación por familias.",
+  },
+];
+
+const requestBody = `{
+  "SourceCode": [],
+  "Itineraries": [
+    {
+      "DateDeparture": "2024-07-12",
+      "IATADeparture": "PEI",
+      "IATAArrival": "BOG",
+      "TimeDeparture": 0
+    },
+    {
+      "DateDeparture": "2024-07-15",
+      "IATADeparture": "BOG",
+      "IATAArrival": "PEI",
+      "TimeDeparture": 0
+    }
+  ],
+  "PaxAdults": 1,
+  "PaxChildren": 0,
+  "PaxInfants": 0,
+  "BaggageOption": "0",
+  "PreferredAirlines": [],
+  "Cabin": "Economy",
+  "DirectFlight": false,
+  "Language": "ES"
+}`;
 
 const codeExamples = [
   {
     language: "curl",
     label: "cURL",
-    code: `curl -X GET "https://api.ideasfractal.com/v1/availability?destination=CTG&check_in=2024-03-15&check_out=2024-03-20&guests=2" \\
-  -H "Authorization: Bearer TU_API_KEY" \\
-  -H "Content-Type: application/json"`,
+    code: `curl -X POST "{{URLBase}}/flights/availability/made" \\
+  -H "x-api-key: GrOA6TMEdR7Q5ryEXXXXXXXXXX" \\
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1Qi..." \\
+  -H "Content-Type: application/json" \\
+  -d '${requestBody}'`,
   },
   {
     language: "javascript",
     label: "JavaScript",
-    code: `const response = await fetch(
-  'https://api.ideasfractal.com/v1/availability?destination=CTG&check_in=2024-03-15&check_out=2024-03-20&guests=2',
-  {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer TU_API_KEY',
-      'Content-Type': 'application/json',
-    },
-  }
-);
-
-const data = await response.json();
-console.log(data);`,
+    code: `const response = await fetch('{{URLBase}}/flights/availability/made', {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'GrOA6TMEdR7Q5ryEXXXXXXXXXX',
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1Qi...',
+    'Content-Type': 'application/json',
   },
-  {
-    language: "python",
-    label: "Python",
-    code: `import requests
+  body: JSON.stringify({
+    SourceCode: [],
+    Itineraries: [
+      {
+        DateDeparture: '2024-07-12',
+        IATADeparture: 'PEI',
+        IATAArrival: 'BOG',
+        TimeDeparture: 0
+      },
+      {
+        DateDeparture: '2024-07-15',
+        IATADeparture: 'BOG',
+        IATAArrival: 'PEI',
+        TimeDeparture: 0
+      }
+    ],
+    PaxAdults: 1,
+    PaxChildren: 0,
+    PaxInfants: 0,
+    BaggageOption: '0',
+    PreferredAirlines: [],
+    Cabin: 'Economy',
+    DirectFlight: false,
+    Language: 'ES'
+  }),
+});
 
-url = "https://api.ideasfractal.com/v1/availability"
-params = {
-    "destination": "CTG",
-    "check_in": "2024-03-15",
-    "check_out": "2024-03-20",
-    "guests": 2
-}
-headers = {
-    "Authorization": "Bearer TU_API_KEY",
-    "Content-Type": "application/json"
-}
-
-response = requests.get(url, params=params, headers=headers)
-data = response.json()
-print(data)`,
+const data = await response.json();`,
   },
   {
     language: "csharp",
     label: "C#",
     code: `using System;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 var client = new HttpClient();
-var request = new HttpRequestMessage(
-    HttpMethod.Get, 
-    "https://api.ideasfractal.com/v1/availability?destination=CTG&check_in=2024-03-15&check_out=2024-03-20&guests=2"
-);
+var request = new HttpRequestMessage(HttpMethod.Post, "{{URLBase}}/flights/availability/made");
 
-request.Headers.Add("Authorization", "Bearer TU_API_KEY");
-request.Headers.Add("Content-Type", "application/json");
+request.Headers.Add("x-api-key", "GrOA6TMEdR7Q5ryEXXXXXXXXXX");
+request.Headers.Add("Authorization", "Bearer eyJ0eXAiOiJKV1Qi...");
+
+var json = @"{
+  ""SourceCode"": [],
+  ""Itineraries"": [
+    {
+      ""DateDeparture"": ""2024-07-12"",
+      ""IATADeparture"": ""PEI"",
+      ""IATAArrival"": ""BOG"",
+      ""TimeDeparture"": 0
+    },
+    {
+      ""DateDeparture"": ""2024-07-15"",
+      ""IATADeparture"": ""BOG"",
+      ""IATAArrival"": ""PEI"",
+      ""TimeDeparture"": 0
+    }
+  ],
+  ""PaxAdults"": 1,
+  ""PaxChildren"": 0,
+  ""PaxInfants"": 0,
+  ""Cabin"": ""Economy"",
+  ""DirectFlight"": false,
+  ""Language"": ""ES""
+}";
+
+request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
 var response = await client.SendAsync(request);
 var content = await response.Content.ReadAsStringAsync();
@@ -76,124 +152,54 @@ Console.WriteLine(content);`,
   },
 ];
 
-const responseExample = {
-  language: "json",
-  label: "Respuesta",
-  code: `{
-  "status": "success",
-  "data": {
-    "destination": "CTG",
-    "destination_name": "Cartagena de Indias",
-    "check_in": "2024-03-15",
-    "check_out": "2024-03-20",
-    "guests": 2,
-    "results": [
-      {
-        "id": "HTL_CTG_001",
-        "name": "Hotel Caribe by Faranda Grand",
-        "type": "hotel",
-        "category": "5 estrellas",
-        "rating": 4.7,
-        "location": {
-          "address": "Bocagrande, Cartagena",
-          "latitude": 10.3978,
-          "longitude": -75.5605
-        },
-        "price": {
-          "amount": 1250000,
-          "currency": "COP",
-          "breakdown": {
-            "nightly_rate": 250000,
-            "nights": 5,
-            "taxes": 125000,
-            "service_fee": 50000
-          }
-        },
-        "availability": true,
-        "amenities": ["wifi", "desayuno", "piscina", "spa", "gimnasio"],
-        "images": ["https://cdn.ideasfractal.com/hotels/ctg001/1.jpg"]
-      },
-      {
-        "id": "VLO_CTG_045",
-        "name": "Vuelo Bogotá - Cartagena",
-        "type": "flight",
-        "airline": "Avianca",
-        "flight_number": "AV8552",
-        "departure": {
-          "airport": "BOG",
-          "airport_name": "El Dorado",
-          "time": "2024-03-15T08:30:00-05:00"
-        },
-        "arrival": {
-          "airport": "CTG",
-          "airport_name": "Rafael Núñez",
-          "time": "2024-03-15T10:15:00-05:00"
-        },
-        "price": {
-          "amount": 485000,
-          "currency": "COP"
-        },
-        "availability": true,
-        "baggage": "23kg incluido"
-      }
-    ],
-    "total_results": 24,
-    "filters": {
-      "price_range": { "min": 450000, "max": 3500000 },
-      "categories": ["3 estrellas", "4 estrellas", "5 estrellas"]
-    }
-  }
-}`,
-};
-
-const queryParameters = [
+const bodyParameters = [
   {
-    name: "destination",
-    type: "string",
-    required: true,
-    description: "Código del destino (código IATA o código interno). Ejemplos: CTG (Cartagena), BOG (Bogotá), MDE (Medellín), SMR (Santa Marta)",
+    name: "SourceCode",
+    type: "array",
+    required: false,
+    description: "Códigos de fuentes/proveedores a consultar. Si está vacío, consulta todas las fuentes configuradas.",
   },
   {
-    name: "check_in",
-    type: "string",
+    name: "Itineraries",
+    type: "array",
     required: true,
-    description: "Fecha de entrada en formato ISO 8601 (YYYY-MM-DD)",
+    description: "Array de itinerarios (ida y/o vuelta). Cada itinerario debe tener DateDeparture, IATADeparture, IATAArrival y TimeDeparture.",
   },
   {
-    name: "check_out",
-    type: "string",
-    required: true,
-    description: "Fecha de salida en formato ISO 8601 (YYYY-MM-DD)",
-  },
-  {
-    name: "guests",
+    name: "PaxAdults",
     type: "integer",
     required: true,
-    description: "Número de huéspedes (1-10)",
+    description: "Número de pasajeros adultos.",
   },
   {
-    name: "type",
+    name: "PaxChildren",
+    type: "integer",
+    required: true,
+    description: "Número de pasajeros niños.",
+  },
+  {
+    name: "PaxInfants",
+    type: "integer",
+    required: true,
+    description: "Número de pasajeros infantes.",
+  },
+  {
+    name: "Cabin",
     type: "string",
-    required: false,
-    description: "Filtrar por tipo: hotel, flight, activity, package. Por defecto: todos",
+    required: true,
+    description: "Clase de cabina: Economy, Business, First.",
   },
   {
-    name: "min_price",
-    type: "number",
-    required: false,
-    description: "Precio mínimo en COP",
+    name: "DirectFlight",
+    type: "boolean",
+    required: true,
+    description: "Si es true, solo retorna vuelos directos.",
   },
   {
-    name: "max_price",
-    type: "number",
-    required: false,
-    description: "Precio máximo en COP",
-  },
-  {
-    name: "category",
+    name: "Language",
     type: "string",
-    required: false,
-    description: "Categoría del hotel: 3_estrellas, 4_estrellas, 5_estrellas",
+    required: true,
+    description: "Idioma de la respuesta: ES, EN, etc.",
   },
 ];
 
@@ -208,51 +214,67 @@ export default function AvailabilityPage() {
         className="space-y-4"
       >
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 font-mono">
-            GET
-          </Badge>
-          <code className="text-lg font-mono text-muted-foreground">/v1/availability</code>
+          <Plane className="h-8 w-8 text-blue-500" />
+          <h1 className="text-4xl font-bold tracking-tight">Disponibilidad de Vuelos</h1>
         </div>
         
-        <h1 className="text-4xl font-bold tracking-tight">Consultar Disponibilidad</h1>
-        
         <p className="text-lg text-muted-foreground">
-          Busca disponibilidad de hoteles, vuelos, actividades y paquetes turísticos 
-          en destinos de Colombia. Este endpoint retorna información en tiempo real 
-          de precios y disponibilidad de múltiples proveedores locales.
+          Nuestro API permite hacer tres tipos de consultas de disponibilidad. 
+          Para el proceso de búsqueda se usa el mismo objeto de petición para los 
+          tres tipos de consultas; la manera como llegan los resultados depende 
+          de cuál endpoint se utilice.
         </p>
       </motion.div>
 
       <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>Límite de Peticiones</AlertTitle>
+        <AlertTitle>Headers Requeridos</AlertTitle>
         <AlertDescription>
-          Este endpoint tiene un límite de 100 peticiones por minuto por API Key. 
-          Considera implementar caché para mejorar el rendimiento de tu aplicación.
+          <code>x-api-key</code> y <code>Authorization: Bearer {'{token}'}</code> son obligatorios.
         </AlertDescription>
       </Alert>
 
       <Separator />
 
-      {/* Request Examples */}
+      {/* Endpoints */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold tracking-tight">Ejemplos de Solicitud</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Endpoints</h2>
         
-        <p className="text-muted-foreground">
-          A continuación ejemplos de cómo llamar este endpoint en diferentes lenguajes:
-        </p>
-        
-        <CodeBlock examples={codeExamples} />
+        <Tabs defaultValue="price" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            {endpoints.map((ep) => (
+              <TabsTrigger key={ep.type} value={ep.type}>{ep.label}</TabsTrigger>
+            ))}
+          </TabsList>
+          
+          {endpoints.map((ep) => (
+            <TabsContent key={ep.type} value={ep.type} className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 font-mono">
+                      POST
+                    </Badge>
+                    <code className="text-lg font-mono">{ep.path}</code>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{ep.description}</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          ))}
+        </Tabs>
       </section>
 
       <Separator />
 
-      {/* Query Parameters */}
+      {/* Request Body */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold tracking-tight">Parámetros de Consulta</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Body de la Petición</h2>
         
         <div className="grid gap-4">
-          {queryParameters.map((param, index) => (
+          {bodyParameters.map((param, index) => (
             <motion.div
               key={param.name}
               initial={{ opacity: 0, x: -20 }}
@@ -280,75 +302,48 @@ export default function AvailabilityPage() {
 
       <Separator />
 
-      {/* Response */}
+      {/* Examples */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold tracking-tight">Respuesta</h2>
-        
-        <p className="text-muted-foreground">
-          La respuesta contiene una lista de opciones disponibles con precios en COP y detalles:
-        </p>
-        
-        <CodeBlock examples={[responseExample]} title="200 OK - Respuesta Exitosa" />
+        <h2 className="text-2xl font-bold tracking-tight">Ejemplo de Solicitud</h2>
+        <CodeBlock examples={codeExamples} />
       </section>
 
       <Separator />
 
-      {/* Error Responses */}
+      {/* Metadata Links */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold tracking-tight">Respuestas de Error</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Metadatos</h2>
         
         <div className="grid gap-4">
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <Badge variant="destructive">400</Badge>
-                <CardTitle className="text-base">Solicitud Incorrecta</CardTitle>
-              </div>
+              <CardTitle className="text-base">Documentación de Objetos</CardTitle>
             </CardHeader>
-            <CardContent>
-              <pre className="text-sm bg-muted p-3 rounded-md">
-                {JSON.stringify({
-                  "status": "error",
-                  "code": "INVALID_DATE_FORMAT",
-                  "message": "La fecha check_in debe estar en formato YYYY-MM-DD"
-                }, null, 2)}
-              </pre>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <Badge variant="destructive">401</Badge>
-                <CardTitle className="text-base">No Autorizado</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <pre className="text-sm bg-muted p-3 rounded-md">
-                {JSON.stringify({
-                  "status": "error",
-                  "code": "UNAUTHORIZED",
-                  "message": "API Key inválida o no proporcionada"
-                }, null, 2)}
-              </pre>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <Badge variant="destructive">429</Badge>
-                <CardTitle className="text-base">Demasiadas Peticiones</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <pre className="text-sm bg-muted p-3 rounded-md">
-                {JSON.stringify({
-                  "status": "error",
-                  "code": "RATE_LIMIT_EXCEEDED",
-                  "message": "Límite de peticiones excedido. Intenta nuevamente en 60 segundos."
-                }, null, 2)}
-              </pre>
+            <CardContent className="space-y-2">
+              <a 
+                href="https://beta-dev-rest.kontroltravel.com/json/metadata?op=AvailabilityByPriceRQ" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-blue-500 hover:underline block"
+              >
+                AvailabilityByPriceRQ →
+              </a>
+              <a 
+                href="https://beta-dev-rest.kontroltravel.com/json/metadata?op=AvailabilitySingleRQ" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-blue-500 hover:underline block"
+              >
+                AvailabilitySingleRQ →
+              </a>
+              <a 
+                href="https://beta-dev-rest.kontroltravel.com/json/metadata?op=AvailabilityFareFamilyRQ" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-blue-500 hover:underline block"
+              >
+                AvailabilityFareFamilyRQ →
+              </a>
             </CardContent>
           </Card>
         </div>

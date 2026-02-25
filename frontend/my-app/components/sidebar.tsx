@@ -11,9 +11,13 @@ import {
   ChevronRight,
   ChevronDown,
   FolderOpen,
-  Building2,
-  CalendarDays,
-  Users,
+  Plane,
+  Lock,
+  Search,
+  CreditCard,
+  Ticket,
+  XCircle,
+  FileText,
   MapPin,
 } from "lucide-react";
 import { useState } from "react";
@@ -38,24 +42,40 @@ const navItems: NavItem[] = [
     icon: <FolderOpen className="h-4 w-4" />,
     children: [
       {
-        title: "Availability",
-        href: "/ideas-fractal/availability",
-        badge: "GET",
-      },
-      {
-        title: "Create Booking",
-        href: "#",
+        title: "Autenticación",
+        href: "/ideas-fractal/auth",
+        icon: <Lock className="h-3 w-3" />,
         badge: "POST",
       },
       {
-        title: "Get Booking",
-        href: "#",
-        badge: "GET",
+        title: "Disponibilidad",
+        href: "/ideas-fractal/availability",
+        icon: <Search className="h-3 w-3" />,
+        badge: "POST",
       },
       {
-        title: "Cancel Booking",
+        title: "Tarifación",
         href: "#",
-        badge: "DELETE",
+        icon: <CreditCard className="h-3 w-3" />,
+        badge: "POST",
+      },
+      {
+        title: "Reserva",
+        href: "#",
+        icon: <FileText className="h-3 w-3" />,
+        badge: "POST",
+      },
+      {
+        title: "Emisión",
+        href: "#",
+        icon: <Ticket className="h-3 w-3" />,
+        badge: "POST",
+      },
+      {
+        title: "Cancelación",
+        href: "#",
+        icon: <XCircle className="h-3 w-3" />,
+        badge: "POST",
       },
     ],
   },
@@ -124,11 +144,11 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex h-16 items-center gap-3 border-b px-6">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
-            <Building2 className="h-5 w-5 text-white" />
+            <Plane className="h-5 w-5 text-white" />
           </div>
           <div>
             <h1 className="font-semibold text-sm leading-tight">Ideas Fractal</h1>
-            <p className="text-xs text-muted-foreground">API Documentation</p>
+            <p className="text-xs text-muted-foreground">API de Vuelos</p>
           </div>
         </div>
 
@@ -149,25 +169,13 @@ export function Sidebar() {
             </p>
             <div className="space-y-1">
               <Link
-                href="#"
+                href="https://beta-dev-rest.kontroltravel.com/json/metadata"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
               >
                 <MapPin className="h-4 w-4" />
-                Destinos Colombia
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <CalendarDays className="h-4 w-4" />
-                Temporadas
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <Users className="h-4 w-4" />
-                Agencias
+                Metadatos API
               </Link>
             </div>
           </div>
@@ -176,7 +184,7 @@ export function Sidebar() {
         {/* Footer */}
         <div className="border-t p-4">
           <p className="text-xs text-muted-foreground text-center">
-            Ideas Fractal Colombia API v1.0
+            Ideas Fractal Colombia © 2024
           </p>
         </div>
       </div>
