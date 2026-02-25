@@ -1,7 +1,7 @@
-# Travel API Docs - Proyecto de Documentación Interactiva
+# Travel API Docs - Documentación Interactiva Ideas Fractal
 
 ## Descripción
-Sitio web interactivo para documentación de APIs de viajes (Ideas Fractal + Expedia Rapid)
+Sitio web interactivo para documentación de la API de viajes de **Ideas Fractal Colombia**.
 
 ## Estructura
 
@@ -14,17 +14,17 @@ travel-api-docs/
 └── README.md
 ```
 
-## Tecnologías Propuestas
+## Tecnologías
 
 ### Frontend
 - **Framework:** Next.js 14 (App Router)
 - **Estilos:** Tailwind CSS + shadcn/ui
 - **Animaciones:** Framer Motion
-- **Búsqueda:** Algolia DocSearch o Fuse.js
-- **Código:** Prism.js o Shiki para syntax highlighting
+- **Búsqueda:** Fuse.js
+- **Código:** Shiki para syntax highlighting
 
 ### Backend
-- **Runtime:** Node.js + Express o Fastify
+- **Runtime:** Node.js + Fastify
 - **API:** REST + OpenAPI/Swagger
 - **Cache:** Redis
 - **Auth:** JWT
@@ -40,10 +40,24 @@ travel-api-docs/
 - [ ] Playground interactivo (probar APIs)
 - [ ] Diagramas de flujo visuales
 - [ ] Generador de código (SDK)
-- [ ] Comparador de APIs (Ideas Fractal vs Expedia)
 - [ ] Dark/Light mode
 - [ ] Responsive design
 - [ ] i18n (ES/EN)
+
+## Documentación API
+
+La documentación cubre los siguientes servicios de Ideas Fractal:
+
+- **Autenticación** - JWT-based auth
+- **Disponibilidad** - Búsqueda de vuelos (precio, horario, familias tarifarias)
+- **Tarifación** - Confirmación de tarifas
+- **Upsell** - Otras tarifas disponibles
+- **Reserva** - Creación de reservas
+- **Emisión** - Generación de tiquetes
+- **Cancelación** - Anulaciones
+- **Retrieve** - Consulta de reservas
+- **Ancillaries** - Servicios adicionales
+- **Autocompletado** - Aeropuertos
 
 ## Autor
 Pablo Cardenas - Ideas Fractal Colombia
