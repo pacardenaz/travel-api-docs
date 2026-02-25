@@ -5,6 +5,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Deshabilitar features que causan problemas en static export
+  trailingSlash: true,
 };
 
 export default nextConfig;
