@@ -58,7 +58,7 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-background border px-8 py-16">
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-background border px-4 sm:px-8 py-12 sm:py-16">
         <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-black/10 dark:[mask-image:linear-gradient(0deg,black,rgba(0,0,0,0.6))]" />
         
         <motion.div
@@ -123,25 +123,25 @@ export default function HomePage() {
       </section>
 
       {/* Flujo de Trabajo */}
-      <section className="rounded-xl border bg-muted/30 p-8">
+      <section className="rounded-xl border bg-muted/30 p-4 sm:p-8">
         <div className="text-center space-y-4 mb-8">
-          <h2 className="text-2xl font-bold">Flujo de Trabajo</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-xl sm:text-2xl font-bold">Flujo de Trabajo</h2>
+          <p className="text-muted-foreground text-sm sm:text-base">
             Sigue estos pasos para completar una emisión aérea
           </p>
         </div>
         
-        <div className="grid md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {[
-            { icon: <Lock className="h-5 w-5" />, title: "1. Autenticación", desc: "Obtén token JWT" },
-            { icon: <Plane className="h-5 w-5" />, title: "2. Disponibilidad", desc: "Busca vuelos" },
-            { icon: <CreditCard className="h-5 w-5" />, title: "3. Tarifación", desc: "Confirma precios" },
-            { icon: <Ticket className="h-5 w-5" />, title: "4. Reserva", desc: "Crea reserva" },
-            { icon: <Ticket className="h-5 w-5" />, title: "5. Emisión", desc: "Genera tiquete" },
+            { icon: <Lock className="h-4 w-4 sm:h-5 sm:w-5" />, title: "1. Autenticación", desc: "Obtén token JWT" },
+            { icon: <Plane className="h-4 w-4 sm:h-5 sm:w-5" />, title: "2. Disponibilidad", desc: "Busca vuelos" },
+            { icon: <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />, title: "3. Tarifación", desc: "Confirma precios" },
+            { icon: <FileText className="h-4 w-4 sm:h-5 sm:w-5" />, title: "4. Reserva", desc: "Crea reserva" },
+            { icon: <Ticket className="h-4 w-4 sm:h-5 sm:w-5" />, title: "5. Emisión", desc: "Genera tiquete" },
           ].map((step, i) => (
-            <div key={i} className="flex flex-col items-center text-center p-4 rounded-lg bg-card">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 mb-3">{step.icon}</div>
-              <h4 className="font-medium text-sm">{step.title}</h4>
+            <div key={i} className="flex flex-col items-center text-center p-3 sm:p-4 rounded-lg bg-card">
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 mb-2 sm:mb-3">{step.icon}</div>
+              <h4 className="font-medium text-xs sm:text-sm">{step.title}</h4>
               <p className="text-xs text-muted-foreground">{step.desc}</p>
             </div>
           ))}

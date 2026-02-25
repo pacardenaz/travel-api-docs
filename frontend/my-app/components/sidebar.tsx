@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Home,
   ChevronRight,
@@ -18,6 +19,8 @@ import {
   Ticket,
   FileText,
   MapPin,
+  Menu,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -74,7 +77,7 @@ const navItems: NavItem[] = [
   },
 ];
 
-function NavItemComponent({ item, depth = 0 }: { item: NavItem; depth?: number }) {
+function NavItemComponent({ item, depth = 0, onNavigate }: { item: NavItem; depth?: number; onNavigate?: () => void }) {
   const pathname = usePathname();
   const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
   const hasChildren = item.children && item.children.length > 0;
@@ -88,6 +91,8 @@ function NavItemComponent({ item, depth = 0 }: { item: NavItem; depth?: number }
           if (hasChildren) {
             e.preventDefault();
             setIsExpanded(!isExpanded);
+          } else {
+            onNavigate?.();
           }
         }}
         className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${
@@ -106,9 +111,9 @@ function NavItemComponent({ item, depth = 0 }: { item: NavItem; depth?: number }
           </span>
         )}
         {!hasChildren && item.icon && <span>{item.icon}</span>}
-        <span className="flex-1">{item.title}</span>
+        <span className="flex-1 truncate">{item.title}</span>
         {item.badge && (
-          <Badge variant="secondary" className="text-xs font-mono">
+          <Badge variant="secondary" className="text-xs font-mono shrink-0">
             {item.badge}
           </Badge>
         )}
@@ -122,7 +127,7 @@ function NavItemComponent({ item, depth = 0 }: { item: NavItem; depth?: number }
           className="mt-1"
         >
           {item.children?.map((child) => (
-            <NavItemComponent key={child.href} item={child} depth={depth + 1} />
+            <NavItemComponent key={child.href} item={child} depth={depth + 1} onNavigate={onNavigate} />
           ))}
         </motion.div>
       )}
@@ -131,11 +136,13 @@ function NavItemComponent({ item, depth = 0 }: { item: NavItem; depth?: number }
 }
 
 export function Sidebar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-card">
-      <div className="flex h-full flex-col">
-        {/* Logo */}
-        <div className="flex h-16 items-center gap-3 border-b px-6">
+    <>
+      {/* Mobile Menu Button */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b bg-card px-4 lg:hidden">
+        <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
             <Plane className="h-5 w-5 text-white" />
           </div>
@@ -144,43 +151,127 @@ export function Sidebar() {
             <p className="text-xs text-muted-foreground">API de Vuelos</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+        >
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
+      </div>
 
-        {/* Navigation */}
-        <ScrollArea className="flex-1 px-4 py-4">
-          <nav className="space-y-1">
-            {navItems.map((item) => (
-              <NavItemComponent key={item.href} item={item} />
-            ))}
-          </nav>
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="fixed left-0 top-16 z-50 h-[calc(100vh-4rem)] w-64 border-r bg-card lg:hidden"
+            >
+              <ScrollArea className="h-full px-4 py-4">
+                <nav className="space-y-1">
+                  {navItems.map((item) => (
+                    <NavItemComponent 
+                      key={item.href} 
+                      item={item} 
+                      onNavigate={() => setIsMobileMenuOpen(false)}
+                    />
+                  ))}
+                </nav>
 
-          <Separator className="my-4" />
+                <Separator className="my-4" />
 
-          {/* Resources */}
-          <div className="space-y-2">
-            <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Recursos
-            </p>
-            <div className="space-y-1">
-              <Link
-                href="https://beta-dev-rest.kontroltravel.com/json/metadata"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <MapPin className="h-4 w-4" />
-                Metadatos API
-              </Link>
+                <div className="space-y-2">
+                  <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Recursos
+                  </p>
+                  <div className="space-y-1">
+                    <Link
+                      href="https://beta-dev-rest.kontroltravel.com/json/metadata"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <MapPin className="h-4 w-4" />
+                      Metadatos API
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="border-t mt-4 pt-4">
+                  <p className="text-xs text-muted-foreground text-center">
+                    Ideas Fractal Colombia © 2024
+                  </p>
+                </div>
+              </ScrollArea>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r bg-card lg:block">
+        <div className="flex h-full flex-col">
+          {/* Logo */}
+          <div className="flex h-16 items-center gap-3 border-b px-6">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
+              <Plane className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="font-semibold text-sm leading-tight">Ideas Fractal</h1>
+              <p className="text-xs text-muted-foreground">API de Vuelos</p>
             </div>
           </div>
-        </ScrollArea>
 
-        {/* Footer */}
-        <div className="border-t p-4">
-          <p className="text-xs text-muted-foreground text-center">
-            Ideas Fractal Colombia © 2024
-          </p>
+          {/* Navigation */}
+          <ScrollArea className="flex-1 px-4 py-4">
+            <nav className="space-y-1">
+              {navItems.map((item) => (
+                <NavItemComponent key={item.href} item={item} />
+              ))}
+            </nav>
+
+            <Separator className="my-4" />
+
+            <div className="space-y-2">
+              <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Recursos
+              </p>
+              <div className="space-y-1">
+                <Link
+                  href="https://beta-dev-rest.kontroltravel.com/json/metadata"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Metadatos API
+                </Link>
+              </div>
+            </div>
+          </ScrollArea>
+
+          {/* Footer */}
+          <div className="border-t p-4">
+            <p className="text-xs text-muted-foreground text-center">
+              Ideas Fractal Colombia © 2024
+            </p>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

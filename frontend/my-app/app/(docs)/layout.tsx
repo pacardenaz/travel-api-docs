@@ -19,9 +19,9 @@ export default function DocsLayout({
   return (
     <div className={`${inter.className} min-h-screen`}>
       <Sidebar />
-      <div className="ml-64">
+      <div className="lg:ml-64">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 lg:px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div />
           <div className="flex items-center gap-4">
             <ThemeToggle />
@@ -29,7 +29,7 @@ export default function DocsLayout({
         </header>
 
         {/* Main content */}
-        <main className="px-8 py-8">
+        <main className="px-4 py-6 lg:px-8 lg:py-8">
           {children}
         </main>
       </div>
