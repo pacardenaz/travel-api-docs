@@ -16,7 +16,6 @@ import {
   Search,
   CreditCard,
   Ticket,
-  XCircle,
   FileText,
   MapPin,
 } from "lucide-react";

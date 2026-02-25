@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CodeBlock } from "@/components/code-block";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, FileText, Ticket, ArrowRight } from "lucide-react";
+import { Info, FileText, Ticket } from "lucide-react";
 
 const codeExamples = [
   {
